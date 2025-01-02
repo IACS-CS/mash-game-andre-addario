@@ -1,42 +1,71 @@
-import { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import "./App.css";
 
-const App = () => {
+function App() {
+  const [scrambledWords, setScrambledWords] = useState([
+    ["Iacs", "Hawk", "Soar"], // General words
+    ["Derival", "Hinkl", "Cynar", "Dipetrio"] // STEM teacher words
+  ]);
 
-  // Note: this function runs once when the App starts up
-  // and then again any piece of state 
-  // changes!
-  
-  // Example state and setter
-  const [toggle,setToggle] = useState(true);
+  const [currentWord, setCurrentWord] = useState("");
+  const [score, setScore] = useState(0);
+  const [genreIndex, setGenreIndex] = useState(0); // 0 for general, 1 for STEM teacher
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [scrambledWord, setScrambledWord] = useState(""); // Store scrambled word here
 
-  // The console.log statement below will show you each time
-  // the App renders.
-  console.log('Rendering app!','toggle is',toggle);
+  // Function to scramble words (simple shuffling)
+  const shuffleWord = (word) => {
+  let shuffled;
+  do {
+    shuffled = word.split('').sort(() => Math.random() - 0.5).join('');
+  } while (shuffled === word); // Ensure the scrambled word is different from the original
+  return shuffled;
+};
+  // Effect to set the scrambled word when the word or genre changes
+  useEffect(() => {
+    const wordToScramble = scrambledWords[genreIndex][currentWordIndex];
+    setScrambledWord(shuffleWord(wordToScramble));
+  }, [genreIndex, currentWordIndex, scrambledWords]);
 
+  // Function to handle a correct guess
+  const handleCorrectGuess = () => {
+    setScore(score + 1); // Add one egg for correct answer
+    setCurrentWordIndex(currentWordIndex + 1); // Move to next word in the current genre
 
-  // actions  
-
-  // render parts of our output...
-  const renderLightSwitch = () => {
-    if (toggle) {
-      return <div>🟢⚡✅ We are on </div>
-    } else {
-      return <div>🔴🔕❌ We are off :-(</div>
+    // Check if 3 words have been solved in the current genre
+    if (currentWordIndex === 2) {
+      setGenreIndex(genreIndex === 0 ? 1 : 0); // Switch to the next genre after 3 words
+      setCurrentWordIndex(0); // Reset word index for next genre
     }
-  }
+    setCurrentWord(""); // Reset the input
+  };
+
+  // Function to handle incorrect guess
+  const handleIncorrectGuess = () => {
+    alert("Try again!");
+  };
+
+  // The original unscrambled word for comparison
+  const originalWord = scrambledWords[genreIndex][currentWordIndex];
 
   return (
-  <main>
-    <h1>Hello React World</h1>
-    <div className="col">
-      <button onClick={()=>setToggle(!toggle)}>Click me!</button>
-      <div>
-        {renderLightSwitch()}
-      </div>
-    </div>    
-  </main>
+    <div>
+      <h1>Scrabble Type Game</h1>
+      <p>Score: {score} eggs</p>
+      <p>Current Genre: {genreIndex === 0 ? "School Spirit" : "STEM Teacher"}</p>
+      <h2>Unscramble the word: {scrambledWord}</h2>
+
+      <input 
+        type="text" 
+        placeholder="Your guess" 
+        onChange={(e) => setCurrentWord(e.target.value)} 
+        value={currentWord}
+      />
+      <button onClick={() => currentWord === originalWord ? handleCorrectGuess() : handleIncorrectGuess()}>
+        Submit Guess
+      </button>
+    </div>
   );
-};
+}
 
 export default App;
