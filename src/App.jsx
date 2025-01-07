@@ -3,8 +3,8 @@ import "./App.css";
 
 function App() {
   const [scrambledWords, setScrambledWords] = useState([
-    ["Iacs", "Hawk", "Soar"], // General words
-    ["Derival", "Hinkl", "Cynar", "Dipetrio"] // STEM teacher words
+    ["Iacs", "Hawk", "Soar,"], // General words
+    ["Derival", "Hinkle", "Cynar", "Dipetrio"] // STEM teacher words
   ]);
 
   const [currentWord, setCurrentWord] = useState("");
@@ -15,12 +15,13 @@ function App() {
 
   // Function to scramble words (simple shuffling)
   const shuffleWord = (word) => {
-  let shuffled;
-  do {
-    shuffled = word.split('').sort(() => Math.random() - 0.5).join('');
-  } while (shuffled === word); // Ensure the scrambled word is different from the original
-  return shuffled;
-};
+    let shuffled;
+    do {
+      shuffled = word.toLowerCase().split('').sort(() => Math.random() - 0.5).join('');
+    } while (shuffled === word.toLowerCase()); // Ensure the scrambled word is different from the original
+    return shuffled;
+  };
+
   // Effect to set the scrambled word when the word or genre changes
   useEffect(() => {
     const wordToScramble = scrambledWords[genreIndex][currentWordIndex];
@@ -52,7 +53,7 @@ function App() {
     <div>
       <h1>Scrabble Type Game</h1>
       <p>Score: {score} eggs</p>
-      <p>Current Genre: {genreIndex === 0 ? "School Spirit" : "STEM Teacher"}</p>
+      <p>Current Genre: {genreIndex === 0 ? "School spirit" : "STEM Teacher"}</p>
       <h2>Unscramble the word: {scrambledWord}</h2>
 
       <input 
@@ -61,7 +62,13 @@ function App() {
         onChange={(e) => setCurrentWord(e.target.value)} 
         value={currentWord}
       />
-      <button onClick={() => currentWord === originalWord ? handleCorrectGuess() : handleIncorrectGuess()}>
+      <button
+        onClick={() =>
+          currentWord.toLowerCase() === originalWord.toLowerCase()
+            ? handleCorrectGuess()
+            : handleIncorrectGuess()
+        }
+      >
         Submit Guess
       </button>
     </div>
