@@ -3,7 +3,7 @@ import "./App.css";
 
 function App() {
   const [scrambledWords, setScrambledWords] = useState([
-    ["Iacs", "Hawk", "Soar,"], // General words
+    ["Iacs", "Hawk", "Soar"], // General words
     ["Derival", "Hinkle", "Cynar", "Dipetrio"] // STEM teacher words
   ]);
 
@@ -21,8 +21,7 @@ function App() {
     } while (shuffled === word.toLowerCase()); // Ensure the scrambled word is different from the original
     return shuffled;
   };
-
-  // Effect to set the scrambled word when the word or genre changes
+//AI help
   useEffect(() => {
     const wordToScramble = scrambledWords[genreIndex][currentWordIndex];
     setScrambledWord(shuffleWord(wordToScramble));
