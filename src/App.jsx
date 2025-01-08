@@ -76,7 +76,7 @@ function App() {
           {/* Show the scrambled word to the user */}
           <h2>Unscramble the word: {scrambledWord}</h2>
           
-          {/* Input field for the user to type their guess */}
+    
           <input 
             type="text" 
             placeholder="Your guess" 
@@ -84,7 +84,7 @@ function App() {
             value={userGuess}
           />
           
-          {/* Button to submit the guess */}
+       
           <button
             onClick={() =>
               userGuess.toLowerCase() === originalWord.toLowerCase()
